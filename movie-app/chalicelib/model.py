@@ -31,8 +31,8 @@ class Movie(BaseModel):
         self.plot = movie_obj['plot']
         Movie.create(title = self.title, movie_id = self.movie_id, plot = self.plot, user_id = user_id)
 
-    def delete_movie(self, movie_name):
-        query = Movie.delete().where(Movie.title == movie_name).execute()
+    def delete_movie(self, movie_name, user_id):
+        query = Movie.delete().where(Movie.title == movie_name, Movie.user_id == user_id).execute()
 
     # def show_one_movie(self, movie_name):
     #     query = Movie.select(Movie.id, Movie.title, Movie.movie_id, Movie.plot).where(Movie.title == movie_name).execute()

@@ -20,30 +20,27 @@ def find_movie(search):
     except KeyError:
       raise BadRequestError("Unknown city movie")
 
-@app.route('/movies/{user_id}/{search}', methods=['GET'])
-def add_movie(search, user_id):
-  if len(search) >= 3:
-    try:
-      # still need to add search for substring - this only works to find a specific movie
-      m = Movie()
-      search_string = search.replace("_", " ").title()
-      m.create_movie(search_string, user_id)
-      return {"search": search_string, "user": user_id}
-    except KeyError:
-      raise BadRequestError("Unknown city movie")
+@app.route('/user/{user_id}/{movie_title}', methods=['POST', 'DELETE'])
+def add_or_delete_movie(movie_title, user_id):
+  request = app.current_request
+  if len(movie_title) <= 3:
+    raise BadRequestError("Unknown city movie")
+  if request.method == 'POST':
+    m = Movie()
+    search_string = movie_title.replace("_", " ").title()
+    m.create_movie(search_string, user_id)
+    return {"search": search_string, "user": user_id}
+  elif request.method == 'DELETE':
+    m = Movie()
+    search_string = movie_title.replace("_", " ").title()
+    m.delete_movie(search_string, user_id)
+    return {"deleted": search_string}
 
-@app.route('/my_movies/{name}', methods=['DELETE'])
-def delete_movie(name):
-  return "stuff"
-    # request = app.current_request
+# @app.route('user/movies')
 
 def main():
   db.connect()
   db.create_tables([Movie], safe = True)
-    # create_movie("Evita")
-    # delete_movie("A League of Their Own")
-    # show_one_movie("The Matrix")
-    # show_all_movies()
 
 if __name__ == '__main__':
   main()
