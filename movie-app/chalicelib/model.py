@@ -1,8 +1,10 @@
 from peewee import *
 import psycopg2
+import pprint
 from imdb import IMDb
 
 db = PostgresqlDatabase('movieapp', user='postgres', password='postgres')
+pp = pprint.PrettyPrinter(indent=4)
 
 class BaseModel(Model):
     class Meta:
@@ -27,17 +29,22 @@ class Movie(BaseModel):
         self.movie_id = movie[0].movieID
         movie_obj = self.ia.get_movie(self.movie_id)
 
-        self.title = movie_obj['title']
-        self.plot = movie_obj['plot']
-        Movie.create(title = self.title, movie_id = self.movie_id, plot = self.plot, user_id = user_id)
+        title = movie_obj['title']
+        plot = movie_obj['plot']
+        Movie.create(title = title, movie_id = movie_id, plot = plot, user_id = user_id)
 
-    def delete_movie(self, movie_name, user_id):
-        query = Movie.delete().where(Movie.title == movie_name, Movie.user_id == user_id).execute()
+    def delete_movie(self, movie_id, user_id):
+        query = Movie.delete().where(Movie.movie_id == int(movie_id), Movie.user_id == int(user_id)).execute()
 
-    # def show_one_movie(self, movie_name):
-    #     query = Movie.select(Movie.id, Movie.title, Movie.movie_id, Movie.plot).where(Movie.title == movie_name).execute()
-    #     print(query)
-
-    def show_all_movies():
-        query = Movie.select(Movie.id, Movie.title, Movie.movie_id, Movie.plot).execute()
-        print(query)
+    def show_all_movies(self, user_id):
+        # query = Movie.select()
+        results = Movie.select(Movie.id, Movie.title, Movie.movie_id, Movie.plot).where(Movie.user_id == user_id)
+        final = []
+        for result in results:
+            final.append({
+                'id': result.id,
+                'title': result.title,
+                'movie_id': result.movie_id,
+                'plot': result.plot
+            })
+        return(final)
