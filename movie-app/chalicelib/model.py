@@ -21,8 +21,17 @@ class Movie(BaseModel):
     user_id = IntegerField(null = False)
 
     def find_movie(self, query):
-        movie = self.ia.search_movie( query )
-        print(movie)
+        movies = self.ia.search_movie( query )
+        # pp.pprint(movies)
+        final = []
+        for movie in movies:
+          # print("Hello", movie)
+          # pp.pprint(movie['year'] || '')
+          final.append({
+            'title': movie.get('title'),
+            'year': movie.get('year')
+          })
+        return(final)
 
     def create_movie(self, movie_name, user_id):
         movie = self.ia.search_movie( movie_name )
@@ -48,3 +57,6 @@ class Movie(BaseModel):
                 'plot': result.plot
             })
         return(final)
+
+m = Movie()
+m.find_movie("Footloose")

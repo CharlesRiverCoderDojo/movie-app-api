@@ -11,8 +11,14 @@ app.debug = True
 
 m = Movie()
 
-# @app.route('/movies/{search}', methods=['GET'])
-# def find_movie(search):
+@app.route('/movies', methods=['GET'])
+def find_movie():
+  request = app.current_request
+  # print(request.query_params)
+  q = request.query_params['q']
+  movie = m.find_movie(q)
+  return(movie)
+
 #   if len(search) >= 3:
 #     try:
 #       # still need to add search for substring - this only works to find a specific movie
