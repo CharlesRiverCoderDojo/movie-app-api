@@ -9,6 +9,8 @@ class BaseModel(Model):
         database = db
 
 class Movie(BaseModel):
+    # def __init__(self):
+    #     print ("in init")
     ia = IMDb()
     id = PrimaryKeyField()
     movie_id = IntegerField(null = False)
@@ -18,11 +20,11 @@ class Movie(BaseModel):
     def create_movie(self, movie_name):
         movie = self.ia.search_movie( movie_name )
         self.movie_id = movie[0].movieID
-        movie_obj = self.ia.get_movie(movie_id)
+        movie_obj = self.ia.get_movie(self.movie_id)
 
-        title = movie_obj['title']
-        plot = movie_obj['plot']
-        Movie.create(title = title, movie_id = movie_id, plot = plot)
+        self.title = movie_obj['title']
+        self.plot = movie_obj['plot']
+        Movie.create(title = self.title, movie_id = self.movie_id, plot = self.plot)
 
     def delete_movie(self, movie_name):
         query = Movie.delete().where(Movie.title == movie_name).execute()
