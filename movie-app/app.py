@@ -12,10 +12,23 @@ app.debug = True
 def find_movie(search):
   if len(search) >= 3:
     try:
+      # still need to add search for substring - this only works to find a specific movie
       m = Movie()
       search_string = search.replace("_", " ").title()
-      m.create_movie(search_string)
-      return {"search": search_string}
+      m.find_movie(search_string)
+      # return {"search": search_string}
+    except KeyError:
+      raise BadRequestError("Unknown city movie")
+
+@app.route('/movies/{user_id}/{search}', methods=['GET'])
+def add_movie(search, user_id):
+  if len(search) >= 3:
+    try:
+      # still need to add search for substring - this only works to find a specific movie
+      m = Movie()
+      search_string = search.replace("_", " ").title()
+      m.create_movie(search_string, user_id)
+      return {"search": search_string, "user": user_id}
     except KeyError:
       raise BadRequestError("Unknown city movie")
 
