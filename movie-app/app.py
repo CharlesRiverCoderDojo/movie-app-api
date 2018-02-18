@@ -3,31 +3,18 @@ from chalicelib.model import db
 from chalicelib.model import Movie
 import string
 
-from chalice import BadRequestError
-# add error handling to return true or false (can put in the model)
-
 app = Chalice(app_name='movie-app')
 app.debug = True
 
 m = Movie()
 
+# query to find movie titles that match string
 @app.route('/movies', methods=['GET'])
 def find_movie():
   request = app.current_request
-  # print(request.query_params)
   q = request.query_params['q']
   movie = m.find_movie(q)
   return(movie)
-
-#   if len(search) >= 3:
-#     try:
-#       # still need to add search for substring - this only works to find a specific movie
-#       m = Movie()
-#       search_string = search.replace("_", " ").title()
-#       m.find_movie(search_string)
-#       # return {"search": search_string}
-#     except KeyError:
-#       raise BadRequestError("Unknown city movie")
 
 # create one movie for a user
 @app.route('/user/{user_id}/movie', methods=['POST'])
@@ -49,6 +36,11 @@ def delete_movie(movie_id, user_id):
 def get_all_movies(user_id):
  r = m.show_all_movies(user_id)
  return(r)
+
+@app.route('/popular-movies', methods=['GET'])
+def get_popular_movies():
+  p = m.show_popular_movies()
+  return(p)
 
 def main():
   db.connect()
