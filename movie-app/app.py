@@ -32,11 +32,13 @@ def delete_movie(movie_id, user_id):
   m.delete_movie(movie_id, user_id)
   return {"deleted": movie_id}
 
+# get all movies for a given user
 @app.route('/user/{user_id}/movies', methods=['GET'])
 def get_all_movies(user_id):
  r = m.show_all_movies(user_id)
  return(r)
 
+# get popular movies ranked by number of times saved in database, irrespective of user
 @app.route('/popular-movies', methods=['GET'])
 def get_popular_movies():
   p = m.show_popular_movies()

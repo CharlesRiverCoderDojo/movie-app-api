@@ -66,6 +66,3 @@ class Movie(BaseModel):
         'movie_id': result.movie_id,
       })
     return(final)
-
-# m = Movie()
-# m.find_movie("Footloose")
