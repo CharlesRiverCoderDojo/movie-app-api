@@ -1,7 +1,8 @@
 sudo su
-  pip install peewee
-  pip install psycopg2
-  pip install git+https://github.com/alberanid/imdbpy
+pip install -U pip
+exit
+pip install -r requirements.txt
+
 
 Postico
 - movie-app

@@ -20,11 +20,11 @@ def find_movie():
 @app.route('/user/{user_id}/movie', methods=['POST'], cors=True)
 def add_movie(user_id):
   request = app.current_request
-  movie_title = request.json_body['movie_title']
-  if len(movie_title) <= 3:
-    raise BadRequestError("Unknown city movie")
-  m.create_movie(movie_title, user_id)
-  return {"search": movie_title, "user": user_id}
+  movie_id = request.json_body['imdbid']
+  if movie_id is None:
+    raise BadRequestError("Unknown movie")
+  m.create_movie(movie_id, user_id)
+  return {"search": movie_id, "user": user_id}
 
 # delete one movie for a user
 @app.route('/user/{user_id}/{movie_id}', methods=['DELETE'], cors=True)
@@ -43,10 +43,3 @@ def get_all_movies(user_id):
 def get_popular_movies():
   p = m.show_popular_movies()
   return(p)
-
-def main():
-  db.connect()
-  db.create_tables([Movie], safe = True)
-
-if __name__ == '__main__':
-  main()
